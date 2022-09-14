@@ -3,8 +3,9 @@
 #include <QWidget>
 #include <QPainter>
 #include <QMouseEvent>
+#include <QFrame>
 
-class RangeSlider : public QWidget
+class RangeSlider : public QFrame
 {
     Q_OBJECT
     Q_ENUMS(RangeSliderTypes)
@@ -23,26 +24,34 @@ public:
 
     QSize minimumSizeHint() const override;
 
-    int GetMinimun() const;
-    void SetMinimum(int aMinimum);
+    int getMinimun() const;
+    void setMinimum(int aMinimum);
 
-    int GetMaximun() const;
-    void SetMaximum(int aMaximum);
+    int getMaximun() const;
+    void setMaximum(int aMaximum);
 
-    int GetLowerValue() const;
-    void SetLowerValue(int aLowerValue);
+    int getLowerValue() const;
+    void setLowerValue(int aLowerValue);
 
-    int GetUpperValue() const;
-    void SetUpperValue(int aUpperValue);
+    int getUpperValue() const;
+    void setUpperValue(int aUpperValue);
 
-    void SetRange(int aMinimum, int aMaximum);
+    void setLowerUpperValue(int aLowerValue, int aUpperValue);
+    void setRange(int aMinimum, int aMaximum);
+
+    void setOrientation(Qt::Orientation orientation);
+    void setOptions(Options type);
+
+
 
 protected:
     void paintEvent(QPaintEvent* aEvent) override;
     void mousePressEvent(QMouseEvent* aEvent) override;
     void mouseMoveEvent(QMouseEvent* aEvent) override;
     void mouseReleaseEvent(QMouseEvent* aEvent) override;
+    void wheelEvent(QWheelEvent *event) override;
     void changeEvent(QEvent* aEvent) override;
+    void leaveEvent(QEvent *aEvent) override;
 
     QRectF firstHandleRect() const;
     QRectF secondHandleRect() const;
@@ -54,10 +63,10 @@ signals:
     void rangeChanged(int aMin, int aMax);
 
 public slots:
-    void setLowerValue(int aLowerValue);
-    void setUpperValue(int aUpperValue);
-    void setMinimum(int aMinimum);
-    void setMaximum(int aMaximum);
+    void onSetLowerValue(int aLowerValue);
+    void onSetUpperValue(int aUpperValue);
+    void onSetMinimum(int aMinimum);
+    void onSetMaximum(int aMaximum);
 
 private:
     Q_DISABLE_COPY(RangeSlider)
@@ -72,11 +81,25 @@ private:
     bool mSecondHandlePressed;
     int mInterval;
     int mDelta;
+
+    int mHandleWidth;
+    int mHandleHeight;
+
     QColor mBackgroudColorEnabled;
     QColor mBackgroudColorDisabled;
     QColor mBackgroudColor;
+    QColor m1HandleColor;
+    QColor m2HandleColor;
     Qt::Orientation orientation;
     Options type;
+
+    QRectF mRectGroove;
+    QRectF mSelectedRect;
+    QRectF mLeftHandleRect;
+    QRectF mRightHandleRect;
+
+    int test;
+
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(RangeSlider::Options)
